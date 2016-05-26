@@ -24,6 +24,8 @@ app.factory("wikiAPI", ['$http', function($http){
 
 app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', function($scope, wikiAPI, $mdDialog){
 
+  $scope.pages = {};
+
   $scope.goToRandom = function(){
     window.open("https://en.wikipedia.org/wiki/Special:Random");
   }
@@ -32,7 +34,7 @@ app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', function($sc
     if ($("#search").val() != "") {
       wikiAPI.getWikiEntries()
       .success(function(resp){
-        
+        $scope.pages = resp.query.pages;
         console.log(resp);
       })
       .error(function(error){

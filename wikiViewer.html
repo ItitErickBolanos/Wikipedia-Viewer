@@ -25,11 +25,10 @@
                   <md-icon md-font-icon="fa fa-search" style="cursor: pointer" ng-click="searchEntries()"></md-icon>
                 </md-input-container>
                 <md-list>
-                  <md-divider></md-divider>
-                  <md-list-item class="md-2-line" ng-repeat="result in results">
+                  <md-list-item class="md-2-line" ng-repeat="page in pages">
                     <div class="md-list-item-text">
-                      <a ng-href="" style="text-decoration: none"><h3></h3></a>
-                      <p></p>
+                      <a ng-href="{{ 'https://en.wikipedia.org/?curid='+ page.pageid }}" style="text-decoration: none"><h3>{{ page.title }}</h3></a>
+                      <p>{{ page.extract }}</p>
                     </div>
                     <md-divider></md-divider>
                   </md-list-item>
