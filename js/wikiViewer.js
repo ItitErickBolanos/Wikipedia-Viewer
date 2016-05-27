@@ -22,9 +22,14 @@ app.factory("wikiAPI", ['$http', function($http){
   return wikiObj;
 }]);
 
-app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', function($scope, wikiAPI, $mdDialog){
+app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', '$interval', function($scope, wikiAPI, $mdDialog, $interval){
 
-  $scope.pages = {};
+  var self = this,  j= 0, counter = 0;
+      self.modes = [ ];
+      self.activated = true;
+      $scope.loading = false;
+      $scope.showResults = false;
+      $scope.pages = {};
 
   $scope.goToRandom = function(){
     window.open("https://en.wikipedia.org/wiki/Special:Random");
@@ -32,10 +37,24 @@ app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', function($sc
 
   $scope.searchEntries = function(){
     if ($("#search").val() != "") {
+      // Iterate every 100ms, non-stop
+      $scope.loading = true;
+      $scope.showResults = false;
+      $interval(function() {
+        // Increment the Determinate loader
+        // Incrementally start animation the five (5) Indeterminate,
+        // themed progress circular bars
+        if ( (j < 5) && !self.modes[j] && self.activated ) {
+          self.modes[j] = 'indeterminate';
+        }
+        if ( counter++ % 4 == 0 ) j++;
+      }, 100, 0, true);
       wikiAPI.getWikiEntries()
       .success(function(resp){
         $scope.pages = resp.query.pages;
-        console.log(resp);
+        j = counter = 0;
+        $scope.loading = false;
+        $scope.showResults = true;
       })
       .error(function(error){
         console.log(error);
@@ -50,5 +69,9 @@ app.controller("wikiController", ['$scope', 'wikiAPI', '$mdDialog', function($sc
           .ok('Ok')
       );
     }
+  };
+
+  $scope.openArticle = function(pageid){
+    window.open('https://en.wikipedia.org/?curid='+ pageid);
   };
 }]);

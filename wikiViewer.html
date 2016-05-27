@@ -12,22 +12,25 @@
             <div class="container" ng-cloak ng-controller="wikiController">
               <md-toolbar class="md-primary">
                 <div layout="row">
-                  <div class="md-toolbar-tools" flex="70">
+                  <div class="md-toolbar-tools" flex="70" flex-sm="50">
                     <h2>Wikipedia Viewer</h2>
                   </div>
-                  <md-button class="md-raised" flex="10" flex-offset="20" ng-click="goToRandom()">Go to random article</md-button>
+                  <md-button class="md-raised md-accent" flex="10" flex-offset="20" flex-sm-offset="10" flex-sm="30" ng-click="goToRandom()">Random article</md-button>
                 </div>
               </md-toolbar>
               <md-content flex layout-padding>
                 <md-input-container flex="90" flex-offset="5" class="md-primary md-block" class="md-icon-float">
                   <label>Search wikipedia articles</label>
-                  <input type="text" id="search"/>
+                  <input type="text" id="search" ng-keyup="$event.keyCode == 13 && searchEntries()"/>
                   <md-icon md-font-icon="fa fa-search" style="cursor: pointer" ng-click="searchEntries()"></md-icon>
                 </md-input-container>
-                <md-list>
-                  <md-list-item class="md-2-line" ng-repeat="page in pages">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" flex-offset="45" class="md-block" layout="column"></md-progress-circular>
+                <h3 ng-show="showResults" flex-offset="45">Search results:</h3>
+                <md-list ng-show="showResults">
+                  <md-divider></md-divider>
+                  <md-list-item class="md-2-line item" ng-repeat="page in pages" ng-click="openArticle(page.pageid)">
                     <div class="md-list-item-text">
-                      <a ng-href="{{ 'https://en.wikipedia.org/?curid='+ page.pageid }}" style="text-decoration: none"><h3>{{ page.title }}</h3></a>
+                      <a ng-href="{{ 'https://en.wikipedia.org/?curid='+ page.pageid }}" style="text-decoration: none"><strong>{{ page.title }}</strong></a>
                       <p>{{ page.extract }}</p>
                     </div>
                     <md-divider></md-divider>
